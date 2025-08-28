@@ -77,7 +77,7 @@ public class IDChanger extends AbstractGUI implements RecipeDisplayItem {
         try {
             SlimefunItem it = SlimefunItem.getById(lore);
             if (it != null) {
-                if (!it.isDisabled()) {
+                if (!it.isDisabled() && !it.getId().equals("ME_CREATIVE_ITEM_STORAGE_CELL")) {
                     inv.pushItem(it.getItem().clone(), getOutputSlots());
                 } else {
                     inv.pushItem(new CustomItemStack(Material.PAPER, "&7这个物品已经被禁用了!"));
