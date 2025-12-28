@@ -1,14 +1,19 @@
 package cn.qy.MomoTech.utils;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
+import io.github.thebusybiscuit.slimefun4.utils.itemstack.ItemStackWrapper;
+import me.matl114.matlib.utils.itemCache.ItemStackCache;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -40,7 +45,17 @@ public class MachineUtils {
         }
         return false;
     }
-    public static boolean simpleNullonlyProcessor(BlockMenu inv,int[] inputSlot,int[] outputSlots,ItemStack itemToBeConsumed,ItemStack itemToBePushed){
+
+    public static boolean simpleNullonlyProcessor(BlockMenu inv, int[] inputSlot, int[] outputSlots, SlimefunItemStack itemToBeConsumed, ItemStack itemToBePushed){
+        return consumeAndPushNullOnly(inv,inputSlot,outputSlots,(it)->{
+            return it.getAmount() >= itemToBeConsumed.getAmount() && Objects.equals(itemToBeConsumed.getItemId(), Slimefun.getItemDataService().getItemData(it).orElse(null));
+        },(it)->{
+            it.setAmount(it.getAmount()-itemToBeConsumed.getAmount());
+            return itemToBePushed;
+        },true);
+    }
+
+    public static boolean simpleNullonlyProcessor(BlockMenu inv, int[] inputSlot, int[] outputSlots, ItemStackWrapper itemToBeConsumed, ItemStack itemToBePushed){
         return consumeAndPushNullOnly(inv,inputSlot,outputSlots,(it)->{
             return SlimefunUtils.isItemSimilar(it,itemToBeConsumed,false,true,false);
         },(it)->{
@@ -97,7 +112,7 @@ public class MachineUtils {
     }
     public static boolean multiProcessor(BlockMenu inv, int[] inputSlot, int[] outputSlots, ItemStack itemConsumed,ItemStack itemPushed,boolean returnAfterPushed){
         return consumeAndPushSimple(inv,inputSlot,outputSlots,(item)->{
-            if(SlimefunUtils.isItemSimilar(item,itemConsumed,false,false,false)){
+            if(SlimefunUtils.isItemSimilar(item, itemConsumed,false,false,false)){
                 ItemStack itemResult= itemPushed==null? null: itemPushed.clone();
                 itemResult.setAmount(item.getAmount());
                 return new Pair<>(itemResult,()->item.setAmount(0));
@@ -105,10 +120,10 @@ public class MachineUtils {
             return null;
         },returnAfterPushed);
     }
-    public static boolean multiProcessor(BlockMenu inv, int[] inputSlot, int[] outputSlots, HashMap<ItemStack,ItemStack> itemMaps,boolean returnAfterPushed){
+    public static boolean multiProcessor(BlockMenu inv, int[] inputSlot, int[] outputSlots, HashMap<ItemStack, ItemStack> itemMaps,boolean returnAfterPushed){
         return consumeAndPushSimple(inv,inputSlot,outputSlots,(item)->{
             for(Map.Entry<ItemStack,ItemStack> entry:itemMaps.entrySet()){
-                if(SlimefunUtils.isItemSimilar(item,entry.getKey(),false,false,false)){
+                if(SlimefunUtils.isItemSimilar(item, entry.getKey(),false,false,false)){
                     int should=item.getAmount();
                     ItemStack returned=entry.getValue();
                     if(returned!=null){

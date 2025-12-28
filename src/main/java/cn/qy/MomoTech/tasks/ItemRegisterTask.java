@@ -562,7 +562,7 @@ public class ItemRegisterTask {
         Items.MOMOTECH_RULE_PICKAXE.addUnsafeEnchantment(Enchantment.LOOT_BONUS_BLOCKS, 35);
         Items.MOMOTECH_RULE_PICKAXE.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
 
-        new IDDisplay(Items.MOMOTECH_FINAL, Items.MOMOTECH_ID_DISPLAY, "MOMOTECH_ID_DISPLAY", RecipeType.NULL, new ItemStack[]{null, null, null, null, null, null, null, null, null}).register(MomoTech.getInstance());
+//        new IDDisplay(Items.MOMOTECH_FINAL, Items.MOMOTECH_ID_DISPLAY, "MOMOTECH_ID_DISPLAY", RecipeType.NULL, new ItemStack[]{null, null, null, null, null, null, null, null, null}).register(MomoTech.getInstance());
         new ProtectArmor(new SlimefunItemStack("MOMOTECH_ARMOR", Items.MOMOTECH_RULE_BOOTS), new PotionEffect[]{new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 1, false, false, false), new PotionEffect(PotionEffectType.REGENERATION, 600, 0, false, false, false), new PotionEffect(PotionEffectType.SATURATION, 600, 0, false, false, false), new PotionEffect(PotionEffectType.SPEED, 600, 0, false, false, false), new PotionEffect(PotionEffectType.WATER_BREATHING, 600, 0, false, false, false), new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 600, 0, false, false, false), new PotionEffect(PotionEffectType.JUMP, 600, 0, false, false, false)}, boots).register(MomoTech.getInstance());
         SfUtils.RegisterItem("MOMOTECH_PROTON", Items.MOMOTECH_PROTON, Items.MOMOTECH_ITEM, RecipeType.NULL, PROTON);
         SfUtils.RegisterItem("MOMOTECH_ZYGOTE", Items.MOMOTECH_ZYGOTE, Items.MOMOTECH_ITEM, RecipeType.NULL, ZYGOTE);

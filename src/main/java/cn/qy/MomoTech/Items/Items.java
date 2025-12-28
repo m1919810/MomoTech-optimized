@@ -6,10 +6,28 @@ import cn.qy.MomoTech.MomoTech;
 import cn.qy.MomoTech.NullEnchantment.Register;
 import cn.qy.MomoTech.utils.Utils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.core.guide.SlimefunGuide;
+import io.github.thebusybiscuit.slimefun4.core.guide.SlimefunGuideMode;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
+import io.github.thebusybiscuit.slimefun4.utils.itemstack.SlimefunGuideItem;
+import me.matl114.matlib.algorithms.algorithm.CollectionUtils;
+import me.matl114.matlib.algorithms.algorithm.IterUtils;
+import me.matl114.matlib.implement.slimefun.menu.MenuUtils;
+import me.matl114.matlib.implement.slimefun.menu.guideMenu.CustomItemGroup;
+import me.matl114.matlib.implement.slimefun.menu.menuClickHandler.GuideClickHandler;
+import me.matl114.matlib.implement.slimefun.menu.menuGroup.CustomMenuGroup;
+import me.matl114.matlib.utils.AddUtils;
+import me.matl114.matlib.utils.inventory.itemStacks.CleanItemStack;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class Items {
     interface string {
@@ -276,6 +294,7 @@ public class Items {
     public static final ItemGroup MOMOTECH__;
     public static final ItemGroup MOMOTECH_ELECTRICITY;
     public static final ItemGroup MOMOTECH_INF;
+    public static final ItemGroup MOMOTECH_FINAL_;
     public static final ItemStack[] Cobblestone = new ItemStack[100];
     public static final ItemGroup MOMOTECH_INF_MACHINE;
 
@@ -314,9 +333,43 @@ public class Items {
         MOMOTECH_MINERAL = new SubGroup("MOMOTECH_MINERAL", GROUP[6]);
         MOMOTECH_THANKING = new SubGroup("MOMOTECH_THANKING", GROUP[7]);
         MOMOTECH_INF = new SubGroup("MOMOTECH_INF", GROUP[9]);
+        MOMOTECH_FINAL_ = new CustomItemGroup(new NamespacedKey(MomoTech.getInstance(), "MOMOTECH_FINAL_"), GROUP[4], true)
+            .setLoader(
+                CustomMenuGroup.defaultGroupTemplate(GROUP[4].getItemMeta().getDisplayName())
+                    .addItem(0, ()-> Items.MOMOTECH_ID_DISPLAY, CustomMenuGroup.CustomMenuClickHandler.of((GuideClickHandler)IDDisplay::openIDDisplayPage))
+                    .enableOverrides()
+                    .setOverrideItem(44, new CleanItemStack(Items.MOMOTECH_MATL114, "&x&e&b&3&3&e&b这&x&d&d&2&b&d&d是&x&c&f&2&2&c&f什&x&c&1&1&a&c&1么&x&b&3&1&1&b&3b&x&a&5&0&9&a&5东&x&9&7&0&0&9&7西", "&7???"), CustomMenuGroup.CustomMenuClickHandler.of((player, i, itemStack, clickAction) -> {
+                        player.getWorld().strikeLightningEffect(player.getLocation());
+
+                        player.getWorld().dropItemNaturally(player.getLocation(), switch (new Random().nextInt(4)){
+                            case 0 -> Items.MOMOTECH_MATL114.clone();
+                            case 1 -> new CleanItemStack(Material.COBBLESTONE, c("§#e5de345§#c7df3d00§#a8df47重§#8ae050压§#6be15a缩§#4de163圆§#2fe26c石§#10e376生§#10db7b成§#1ecf7d器"), "&7&l错误的, 你没听错", "&f谁知道呢 或许没点用处呢", "&7效率:8x");
+                            case 2 -> new CleanItemStack(Material.GLASS, c("§#d6fc7c至§#e4fd76造§#f3fe71台"), "&7&l插入非法ID卡,根据ID直接读取输出粘液物品", "&7不可以通过这个制作&l任何&7粘液物品", "&7比如逻辑工艺的终极堆叠机器(LOGITECH_FINAL_STACKMACHINE)");
+                            default -> new CleanItemStack(Material.ENCHANTED_BOOK, "&cSlimefun 指南 &4(作毙模式)", "&4&l仅限管理猿使用", "&e右键 &8⇨ &7浏览物品", "&eShift + 右键 &8⇨ &7打开 设置 / 关于");
+                        });
+                        player.setHealth(0.0D);
+                        player.setLevel(0);
+                        AddUtils.broadCast("&6" + player.getName() + " 找到了新死法, 可喜可贺");
+                        return false;
+                    }))
+                    .setOverrideItem(36, Items.MOMOTECH_UNCONTROLLABLE_EMPTY, Utils.getUncontrollableVoidHandler())
+                ,
+                Map.of(),
+                ()-> {
+                    Map<Integer, SlimefunItem> map = new HashMap<>();
+                    for (var idx : IterUtils.fastEnumerate(MOMOTECH_FINAL.getItems())){
+                        map.put(idx.getIndex() + 1, idx.getValue());
+                    }
+                    return map;
+                }
+            )
+            .setBackButton(1)
+            .setSearchButton(7)
+        ;
+
         MOMOTECH_ELECTRICITY = new SubGroup("MOMOTECH_ELECTRICITY", GROUP[10]);
         MOMOTECH_INF_MACHINE = new SubGroup("MOMOTECH_INF_MACHINE", GROUP[11]);
-        MOMOTECH = new MultiGroup("MOMOTECH", GROUP[8], MOMOTECH__, MOMOTECH_THANKING, MOMOTECH_ITEM, MOMOTECH_MINERAL, MOMOTECH_TOOL, MOMOTECH_ORDINARY_MACHINE, MOMOTECH_MACHINE, MOMOTECH_FINAL, MOMOTECH_ELECTRICITY, MOMOTECH_INF, MOMOTECH_INF_MACHINE);
+        MOMOTECH = new MultiGroup("MOMOTECH", GROUP[8], MOMOTECH__, MOMOTECH_THANKING, MOMOTECH_ITEM, MOMOTECH_MINERAL, MOMOTECH_TOOL, MOMOTECH_ORDINARY_MACHINE, MOMOTECH_MACHINE, MOMOTECH_FINAL_, MOMOTECH_ELECTRICITY, MOMOTECH_INF, MOMOTECH_INF_MACHINE);
         MOMOTECH.register(MomoTech.getInstance());
     }
 }

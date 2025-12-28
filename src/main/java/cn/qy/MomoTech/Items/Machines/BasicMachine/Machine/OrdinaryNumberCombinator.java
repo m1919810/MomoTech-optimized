@@ -13,6 +13,7 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
+import me.matl114.matlib.utils.CraftUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -28,19 +29,29 @@ public class OrdinaryNumberCombinator extends AbstractGUI implements RecipeDispl
         super(itemGroup, new SlimefunItemStack(id, it), recipeType, recipe);
     }
 
-    public static boolean check(ItemStack it) {
-        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_ADDITION, false, false)) return true;
-        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_DIVISION, false, false)) return true;
-        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_MULTIPLICATION, false, false)) return true;
-        return SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_SUBTRACTION, false, false);
-    }
+//    public static boolean check(ItemStack it) {
+//        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_ADDITION, false, false)) return true;
+//        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_DIVISION, false, false)) return true;
+//        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_MULTIPLICATION, false, false)) return true;
+//        return SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_SUBTRACTION, false, false);
+//    }
 
     public static String check1(ItemStack it) {
-        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_ADDITION, false, false)) return "+";
-        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_DIVISION, false, false)) return "/";
-        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_MULTIPLICATION, false, false)) return "*";
-        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_SUBTRACTION, false, false)) return "-";
-        return null;
+        if (it == null || it.getType().isAir()) return null;
+        String id = Slimefun.getItemDataService().getItemData(it).orElse(null);
+        if (id == null) return null;
+        return switch (id){
+            case "MOMOTECH_SYMBOL_ADDITION" -> "+";
+            case "MOMOTECH_SYMBOL_DIVISION" -> "/";
+            case "MOMOTECH_SYMBOL_MULTIPLICATION" -> "*";
+            case "MOMOTECH_SYMBOL_SUBTRACTION" -> "-";
+            default -> null;
+        };
+//        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_ADDITION, false, false)) return "+";
+//        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_DIVISION, false, false)) return "/";
+//        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_MULTIPLICATION, false, false)) return "*";
+//        if (SlimefunUtils.isItemSimilar(it, Items.MOMOTECH_SYMBOL_SUBTRACTION, false, false)) return "-";
+//        return null;
     }
 
     @NotNull
@@ -73,32 +84,9 @@ public class OrdinaryNumberCombinator extends AbstractGUI implements RecipeDispl
     }
 
     private ItemStack out(String a, String b, String c) {
-        double answer;
         double A = Double.parseDouble(a);
         double B = Double.parseDouble(b);
-        try {
-            answer = Double.parseDouble(Objects.requireNonNull(NumberCombinator.Ordinary(A, B, c)));
-            return MomotechItem.digital(answer);
-        } catch (Exceptions.NumberBugException e) {
-            //输出NUMBER_BUG
-            return MomotechItem.bug;
-        } catch (Exceptions.NumberBugIException e) {
-            //输出NUMBER_BUG_I
-            return MomotechItem.bug1;
-        } catch (Exceptions.NumberBugIIException e) {
-            //输出NUMBER_BUG_II
-            return MomotechItem.bug2;
-        } catch (Exceptions.NumberBugIIIException e) {
-            //输出NUMBER_BUG_III
-            return MomotechItem.bug3;
-        } catch (Exceptions.NumberBugIVException e) {
-            //输出NUMBER_BUG_IV
-            return MomotechItem.bug4;
-        } catch (Exceptions.NumberBugVException e) {
-            //输出NUMBER_BUG_V
-            return MomotechItem.bug5;
-        }
-
+        return MomotechItem.resultDigital(NumberCombinator.Ordinary(A, B, c));
     }
 
     protected void findNextRecipe(BlockMenu inv) {
@@ -108,17 +96,22 @@ public class OrdinaryNumberCombinator extends AbstractGUI implements RecipeDispl
         ItemStack it1 = inv.getItemInSlot(getInputSlots()[0]),
                 it2 = inv.getItemInSlot(getInputSlots()[1]),
                 it3 = inv.getItemInSlot(getInputSlots()[2]);
-        if(it1==null||it2==null||it3==null){
+        if(it1==null || it2==null || it3==null){
             return;
         }
-        if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it1).orElseGet(()->"")))
-            if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it3).orElseGet(()->""))){
+        if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it1).orElse(null)))
+            if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it3).orElse(null))){
                 String symbol=check1(it2);
                 if (symbol!=null) {
                     ItemMeta meta1 = it1.getItemMeta(), meta2 = it3.getItemMeta();
                     List<String> lore1 = Utils.getLore(meta1);
                     List<String> lore2 = Utils.getLore(meta2);
-                    ItemStack ans = out(lore1.get(0).substring(lore1.get(0).indexOf('f') + 1), lore2.get(0).substring(lore2.get(0).indexOf('f') + 1),symbol);
+                    if (lore1.isEmpty() || lore2.isEmpty()) return;
+                    String a = lore1.get(0);
+                    a = a.substring(a.indexOf("f") + 1);
+                    String b = lore2.get(0);
+                    b = b.substring(b.indexOf("f") + 1);
+                    ItemStack ans = out(a, b ,symbol);
                     it1.setAmount(it1.getAmount()-1);
                     it2.setAmount(it2.getAmount()-1);
                     it3.setAmount(it3.getAmount()-1);

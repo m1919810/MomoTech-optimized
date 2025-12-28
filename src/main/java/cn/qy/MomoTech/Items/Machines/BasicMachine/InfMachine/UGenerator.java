@@ -9,6 +9,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.utils.itemstack.ItemStackWrapper;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -63,11 +64,11 @@ public class UGenerator extends AbstractElectricGUI implements RecipeDisplayItem
     public int getEnergyConsumption() {
         return 5000;
     }
-    ItemStack consumed=new ItemStack(Material.COBBLESTONE);
+    ItemStack consumed= ItemStackWrapper.wrap( new ItemStack(Material.COBBLESTONE));
     ItemStack output=new CustomItemStack(SlimefunItems.URANIUM,64);
     @Override
     protected boolean findNextRecipe(BlockMenu inv) {
-        return MachineUtils.simpleProcessor(inv,getInputSlots(),getOutputSlots(),consumed,output);
+        return MachineUtils.simpleProcessor(inv,getInputSlots(),getOutputSlots(), consumed ,output);
 //        if (Utils.checkOutput(inv, getOutputSlots())) return false;
 //        for (int i : getInputSlots()) {
 //            if (inv.getItemInSlot(i) != null) {

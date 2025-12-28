@@ -60,31 +60,9 @@ public class Increment extends AbstractGUI implements RecipeDisplayItem {
     }
 
     private ItemStack out(String b, String a) {
-        double answer;
         double A = Double.parseDouble(a);
         double B = Double.parseDouble(b);
-        try {
-            answer = Double.parseDouble(Objects.requireNonNull(NumberCombinator.Ordinary(A, B, "+")));
-            return MomotechItem.digital(answer);
-        } catch (Exceptions.NumberBugException e) {
-            //输出NUMBER_BUG
-            return MomotechItem.bug;
-        } catch (Exceptions.NumberBugIException e) {
-            //输出NUMBER_BUG_I
-            return MomotechItem.bug1;
-        } catch (Exceptions.NumberBugIIException e) {
-            //输出NUMBER_BUG_II
-            return MomotechItem.bug2;
-        } catch (Exceptions.NumberBugIIIException e) {
-            //输出NUMBER_BUG_III
-            return MomotechItem.bug3;
-        } catch (Exceptions.NumberBugIVException e) {
-            //输出NUMBER_BUG_IV
-            return MomotechItem.bug4;
-        } catch (Exceptions.NumberBugVException e) {
-            //输出NUMBER_BUG_V
-            return MomotechItem.bug5;
-        }
+        return MomotechItem.resultDigital(NumberCombinator.Ordinary(A, B, "+"));
 
     }
 
@@ -97,12 +75,16 @@ public class Increment extends AbstractGUI implements RecipeDisplayItem {
         if(it1==null||it2==null){
             return;
         }
-        if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it1).orElseGet(()->null)))
-            if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it2).orElseGet(()->null))) {
+        if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it1).orElse(null)))
+            if ("MOMOTECH_DIGITAL".equals(Slimefun.getItemDataService().getItemData(it2).orElse((null)))) {
                 ItemMeta meta1 = it1.getItemMeta(), meta2 = it2.getItemMeta();
                 List<String> lore1 = Utils.getLore(meta1);
                 List<String> lore2 = Utils.getLore(meta2);
-                ItemStack ans = out(lore1.get(0).substring(lore1.get(0).indexOf('f') + 1), lore2.get(0).substring(lore2.get(0).indexOf('f') + 1));
+                String a = lore1.get(0);
+                a = a.substring(a.indexOf("f") + 1);
+                String b = lore2.get(0);
+                b = b.substring(b.indexOf("f") + 1);
+                ItemStack ans = out(a, b);
                 it1.setAmount(it1.getAmount() - 1);
                 it2.setAmount(it2.getAmount() - 1);
                 inv.replaceExistingItem(16,ans);

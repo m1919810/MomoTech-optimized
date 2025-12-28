@@ -12,40 +12,37 @@ import static cn.qy.MomoTech.MomoTech.playerNumber;
 import static cn.qy.MomoTech.MomoTech.tps;
 
 public class NumberCombinator {
+    private static int dateCache;
+    private static long lastTimeDateCacheUpdate;
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.####");
+    private static void checkDate(){
+        long now = System.currentTimeMillis();
+        if (now - lastTimeDateCacheUpdate > 1000){
+            lastTimeDateCacheUpdate = now;
+            dateCache = Integer.parseInt(new SimpleDateFormat("yyyyMMdd").format(new Date()));
+        }
+    }
     public static String Checker(double i)
-            throws Exceptions.NumberBugIException,
-            Exceptions.NumberBugIIException, Exceptions.NumberBugIIIException,
-            Exceptions.NumberBugIVException, Exceptions.NumberBugVException {
-        int date = Integer.parseInt(new SimpleDateFormat("yyyyMMdd").format(new Date()));
+             {
         int n;
 
-        if (Maths.GetRandom((Math.min (20,(int) tps) * 16777216 * 6)) <= playerNumber * Double.parseDouble((new DecimalFormat("#.0000").format(i))))
-            throw new Exceptions.NumberBugVException();
-        if (i >= 16777216) throw new Exceptions.NumberBugIIIException();
-        if (i <= -16777216) throw new Exceptions.NumberBugIVException();
-        if (i == ((double) date / 100.00)) throw new Exceptions.NumberBugIIException();
-        int j = 0;
-        while (true) {
-            j++;
-            if (i * Math.pow(10, j) % 1 == 0 || j > 6) {
-                n = j;
-                break;
-            }
+        if (Maths.GetRandom((Math.min (20,(int) tps) * 16777216 * 6)) <= playerNumber * i)
+            return "ExN5" ;//throw new Exceptions.NumberBugVException();
+        if (i >= 16777216) return "ExN3";//throw new Exceptions.NumberBugIIIException();
+        if (i <= -16777216) return "ExN4";//throw new Exceptions.NumberBugIVException();
+        checkDate();
+        if (i == ((double) dateCache / 100.00)) return "ExN2"; //throw new Exceptions.NumberBugIIException();
+        if (hasMoreThan4DecimalPlaces(i)){
+            return "ExN1";
         }
 
-        if (n >= 5) throw new Exceptions.NumberBugIException();
-        if (i >= 0 && i < 1) return "0" + (new DecimalFormat("#.0000").format(i));
-        else if (i < 0 && i > -1)
-            return "-0" + (new DecimalFormat("#.0000").format(i)).substring((new DecimalFormat("#.0000")).format(i).indexOf('.'));
-        return (new DecimalFormat("#.0000").format(i));
+        return DECIMAL_FORMAT.format(i);
     }
 
-    public static String Ordinary(double a, double b, String i)
-            throws Exceptions.NumberBugException, Exceptions.NumberBugIException,
-            Exceptions.NumberBugIIException, Exceptions.NumberBugIIIException,
-            Exceptions.NumberBugIVException, Exceptions.NumberBugVException {
+    public static String Ordinary(double a, double b, String i) {
         if (Objects.equals(i, "/")) {
-            if (b == 0) throw new Exceptions.NumberBugException();
+            if (b == 0) return "ExN0";
+//            throw new Exceptions.NumberBugException();
             else return Checker(a / b);
         }
         if (Objects.equals(i, "+"))
@@ -56,5 +53,14 @@ public class NumberCombinator {
             return Checker(a * b);
         return null;
     }
+
+    private static boolean hasMoreThan4DecimalPlaces(double value) {
+        double multiplied = value * 10000;
+        long integerPart = (long) multiplied;
+        double epsilon = 1e-10;
+        double remainder = Math.abs(multiplied - integerPart);
+        return remainder > epsilon;
+    }
+
 
 }

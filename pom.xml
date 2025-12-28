@@ -106,9 +106,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.m1919810</groupId>
-            <artifactId>matlib</artifactId>
-            <version>1d350a2</version>
+            <groupId>com.github.m1919810.matlib</groupId>
+            <artifactId>matlib-all</artifactId>
+            <version>344aa5f</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.m1919810.matlib</groupId>
+            <artifactId>matlib-slimefun</artifactId>
+            <version>344aa5f</version>
             <scope>compile</scope>
         </dependency>
 <!--            <groupId>com.github.Slimefun</groupId>-->

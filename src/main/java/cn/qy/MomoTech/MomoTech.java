@@ -1,11 +1,13 @@
 package cn.qy.MomoTech;
 
+import cn.qy.MomoTech.Items.IDDisplay;
 import cn.qy.MomoTech.Listeners.Listeners;
 import cn.qy.MomoTech.tasks.ItemRegisterTask;
 import cn.qy.MomoTech.tasks.MachineRegisterTask;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
 import lombok.Getter;
+
 import me.matl114.matlib.core.UtilInitialization;
 import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 import org.bukkit.Bukkit;
@@ -85,7 +87,7 @@ public class MomoTech extends JavaPlugin implements SlimefunAddon {
         getLogger().info("开始注册机器");
         MachineRegisterTask.run(getLogger());
         getLogger().info("机器注册成功");
-
+        IDDisplay.registerService(this);
         if (getServer().getPluginManager().isPluginEnabled("GuizhanLibPlugin")) {
             getLogger().info( "检测到 鬼斩前置库插件(GuizhanLibPlugin)!");
             if(autoUpdate){

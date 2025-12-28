@@ -8,6 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponentType;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
@@ -75,7 +76,7 @@ public class DigitalGenerator extends AbstractElectricGUI implements EnergyNetCo
         }
         for (int i : getInputSlots()) {
             if (inv.getItemInSlot(i) != null) {
-                if (SlimefunUtils.isItemSimilar(inv.getItemInSlot(i), MomotechItem.digital(0), false, false)) {
+                if (Slimefun.getItemDataService().getItemData(inv.getItemInSlot(i)).orElse("").equals("MOMOTECH_DIGITAL")) {
                     try{
                         String str = Objects.requireNonNull(inv.getItemInSlot(i).getLore()).get(0);
                         int j = (int) Double.parseDouble(str.substring(str.indexOf('f') + 1));

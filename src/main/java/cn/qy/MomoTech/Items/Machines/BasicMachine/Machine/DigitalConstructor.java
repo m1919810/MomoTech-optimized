@@ -71,10 +71,11 @@ public class DigitalConstructor extends AbstractElectricGUI implements RecipeDis
             add(new CustomItemStack(MomotechItem.digital(i)));
         }
     }}.stream().toArray(ItemStack[]::new));
+    private SlimefunItemStack consume = new SlimefunItemStack("MOMOTECH_EMPTY_SHELL", Items.MOMOTECH_EMPTY_SHELL);
     @Override
     protected boolean findNextRecipe(BlockMenu inv) {
         //ItemStack it = MomotechItem.digital(Maths.GetRandom(10));
-        return MachineUtils.simpleNullonlyProcessor(inv,getInputSlots(),getOutputSlots(),Items.MOMOTECH_EMPTY_SHELL,digitals.getInstance());
+        return MachineUtils.simpleNullonlyProcessor(inv,getInputSlots(),getOutputSlots(), consume, digitals.getInstance());
 //        if (Utils.checkOutput(inv, getOutputSlots())) return false;
 //        for (int i : this.getInputSlots())
 //            if (SlimefunUtils.isItemSimilar(inv.getItemInSlot(i), Items.MOMOTECH_EMPTY_SHELL, true, false)) {

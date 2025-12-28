@@ -2,6 +2,17 @@ package cn.qy.MomoTech.Items;
 
 import cn.qy.MomoTech.utils.Utils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
+import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
+import me.matl114.matlib.utils.CraftUtils;
+import me.matl114.matlib.utils.inventory.itemStacks.CleanItemStack;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MomotechItem {
     public static final SlimefunItemStack[] cobblestone_ = new SlimefunItemStack[100];
@@ -108,8 +119,45 @@ public class MomotechItem {
         }
     }
 
-    public static SlimefunItemStack digital(double i) {
-        return new SlimefunItemStack("MOMOTECH_DIGITAL", Items.MOMOTECH_DIGITAL, "§f数字组件", "§f" + i);
+    public static ItemStack digital(double i) {
+        return digital("" + i);
+    }
+    private static final ItemStack DIGITAL_SAMPLE = CraftUtils.getCraftCopy(new SlimefunItemStack("MOMOTECH_DIGITAL", Items.MOMOTECH_DIGITAL, "§f数字组件", "§f0" ));
+
+    private static final ItemMeta DIGITAL_META = DIGITAL_SAMPLE.getItemMeta();
+
+    public static ItemStack digital(String i) {
+        ItemStack stack = digitalCache.get(i);
+        if (stack != null) {
+            return stack;
+        }
+        stack = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta meta = DIGITAL_META.clone();
+        meta.setLore(List.of("§f" + i));
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    private static final Map<String, ItemStack> digitalCache = new HashMap<String, ItemStack>();
+    static{
+        for (int i = -50; i < 51; ++i) {
+            digitalCache.put("" + i, digital("" + i));
+        }
+    }
+
+
+
+    public static ItemStack resultDigital(String ex){
+        if (ex == null)return null;
+        switch (ex){
+            case "ExN0":return MomotechItem.bug;
+            case "ExN1":return MomotechItem.bug1;
+            case "ExN2":return MomotechItem.bug2;
+            case "ExN3":return MomotechItem.bug3;
+            case "ExN4":return MomotechItem.bug4;
+            case "ExN5":return MomotechItem.bug5;
+            default:return digital(ex);
+        }
     }
 
 }

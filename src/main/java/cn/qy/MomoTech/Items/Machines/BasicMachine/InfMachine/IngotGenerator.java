@@ -13,6 +13,7 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
+import io.github.thebusybiscuit.slimefun4.utils.itemstack.ItemStackWrapper;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,7 @@ public class IngotGenerator extends AbstractGUI implements RecipeDisplayItem {
     public String getMachineIdentifier() {
         return "MOMOTECH_INGOT_CONSTRUCTOR";
     }
-    ItemStack consumed=new CustomItemStack(new SlimefunItemStack("MOMOTECH_METAL_STAR", Items.MOMOTECH_METAL_STAR));
+    ItemStackWrapper consumed= ItemStackWrapper.wrap((new SlimefunItemStack("MOMOTECH_METAL_STAR", Items.MOMOTECH_METAL_STAR)));
     RandomizedItemStack output=new RandomizedItemStack(32,list);
     @Override
     protected void findNextRecipe(BlockMenu inv) {

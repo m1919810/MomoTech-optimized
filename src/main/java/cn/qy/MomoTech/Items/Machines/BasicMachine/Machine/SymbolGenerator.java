@@ -12,6 +12,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
+import io.github.thebusybiscuit.slimefun4.utils.itemstack.ItemStackWrapper;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -76,10 +77,10 @@ public class SymbolGenerator extends AbstractElectricGUI implements RecipeDispla
         else return null;
 
     }
-
+    private ItemStackWrapper consume = ItemStackWrapper.wrap(Items.MOMOTECH_EMPTY_SHELL);
     @Override
     protected boolean findNextRecipe(BlockMenu inv) {
-        return MachineUtils.simpleNullonlyProcessor(inv,getInputSlots(),getOutputSlots(),Items.MOMOTECH_EMPTY_SHELL,out());
+        return MachineUtils.simpleNullonlyProcessor(inv,getInputSlots(),getOutputSlots(), consume ,out());
 //        if (Utils.checkOutput(inv, getOutputSlots())) return false;
 //        ItemStack it = out();
 //        for (int i : this.getInputSlots())
