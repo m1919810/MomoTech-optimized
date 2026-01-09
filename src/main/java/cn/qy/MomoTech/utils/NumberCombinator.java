@@ -14,7 +14,7 @@ import static cn.qy.MomoTech.MomoTech.tps;
 public class NumberCombinator {
     private static int dateCache;
     private static long lastTimeDateCacheUpdate;
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.####");
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.0###");
     private static void checkDate(){
         long now = System.currentTimeMillis();
         if (now - lastTimeDateCacheUpdate > 1000){

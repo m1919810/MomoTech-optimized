@@ -122,7 +122,7 @@ public class MomotechItem {
     public static ItemStack digital(double i) {
         return digital("" + i);
     }
-    private static final ItemStack DIGITAL_SAMPLE = CraftUtils.getCraftCopy(new SlimefunItemStack("MOMOTECH_DIGITAL", Items.MOMOTECH_DIGITAL, "§f数字组件", "§f0" ));
+    private static final ItemStack DIGITAL_SAMPLE = CraftUtils.getCraftCopy(new SlimefunItemStack("MOMOTECH_DIGITAL", Items.MOMOTECH_DIGITAL, "§f数字组件", "§f0.0" ));
 
     private static final ItemMeta DIGITAL_META = DIGITAL_SAMPLE.getItemMeta();
 
